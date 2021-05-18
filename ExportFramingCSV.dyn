@@ -1,0 +1,321 @@
+{
+  "Uuid": "08b43d22-90e7-4ae7-bae2-a06ad20e87d8",
+  "IsCustomNode": false,
+  "Description": null,
+  "Name": "ExportFramingCSV",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [
+    {
+      "Id": "1a8da78dc52c4b86a454017fec7c1aea",
+      "Name": "File Path",
+      "Type": "string",
+      "Value": "ETABS\\CSV\\RevitExport.csv",
+      "Description": "Allows you to select a file on the system to get its filename"
+    }
+  ],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.Filename, CoreNodeModels",
+      "HintPath": "C:\\Users\\glenn\\Google Drive\\WorkRelated\\Dynamo\\BIM Modeling\\DataExchange\\ETABS\\CSV\\RevitExport.csv",
+      "InputValue": "ETABS\\CSV\\RevitExport.csv",
+      "NodeType": "ExtensionNode",
+      "Id": "1a8da78dc52c4b86a454017fec7c1aea",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "2fd5cfcf1f064ef7bad60731071085ce",
+          "Name": "",
+          "Description": "Filename",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows you to select a file on the system to get its filename"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
+      "Id": "48c6cb8c79ea484b89affa35068c3d12",
+      "Inputs": [
+        {
+          "Id": "c58c7d7b7cc9467792db89134b240c61",
+          "Name": "filePath",
+          "Description": "Path to write to\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "3b5319d9e1f244a685c23aa349cc75db",
+          "Name": "data",
+          "Description": "List of lists to write into CSV\n\nvar[][]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "ccde775b84134ec798f8790890b9b1df",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Write a list of lists into a file using a comma-separated values format. Outer list represents rows, inner lists represent columns.\n\nData.ExportCSV (filePath: string, data: var[][]): void"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\n\r\nclr.AddReference(\"RevitAPI\")\r\nfrom Autodesk.Revit.DB import *\r\n\r\nclr.AddReference(\"RevitAPIUI\")\r\nfrom Autodesk.Revit.UI import *\r\n\r\nclr.AddReference('RevitServices')\r\nfrom RevitServices.Persistence import DocumentManager\r\nfrom RevitServices.Transactions import TransactionManager\r\n\r\n# Import RevitNodes\r\nclr.AddReference(\"RevitNodes\")\r\nimport Revit\r\n#from Revit.Elements import *\r\nclr.ImportExtensions(Revit.Elements)\r\nclr.ImportExtensions(Revit.GeometryConversion)\r\n\r\n\r\ndataEnteringNode = IN\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nbeams = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFraming).WhereElementIsNotElementType()\r\ncolumns = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralColumns).WhereElementIsNotElementType()\r\n\r\ndata = []\r\neles = []\r\nerr = []\r\nfor b in beams:\r\n\tlc = b.Location\r\n\ttry:\r\n\t\tend0 = lc.Curve.GetEndPoint(0)\r\n\t\tend1 = lc.Curve.GetEndPoint(1)\r\n\t\tdata.append([end0.X,end0.Y,end0.Z,end1.X,end1.Y,end1.Z,\"BEAM\",b.Name])\r\n\t\teles.append(b)\r\n\texcept:\r\n\t\terr.append(b)\r\n\r\n\r\nfor c in columns:\r\n\ttry:\r\n\t\tend0 = c.Location.Point\r\n\t\tbBox = c.get_BoundingBox(None)#get top column point\r\n\t\tdata.append([end0.X,end0.Y,end0.Z,end0.X,end0.Y,bBox.Max.Z,\"COLUMN\",c.Name])\r\n\t\teles.append(c)\r\n\t\t\r\n\texcept:\r\n\t\terr.append(C)\r\n\r\n# Assign your output to the OUT variable.\r\nOUT = data,eles",
+      "Engine": "IronPython2",
+      "VariableInputPorts": true,
+      "Id": "d029325e4c04438790925170583d640e",
+      "Inputs": [
+        {
+          "Id": "2e760b9b39f64c0ca958bd3b93a8dd61",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "e9d7290fb5874934b65f0200d21b14e7",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Element.Solids",
+      "Id": "0f4b8e39deec4d69bfd69ff32fb3a17a",
+      "Inputs": [
+        {
+          "Id": "490215153df2466286771a351581484c",
+          "Name": "element",
+          "Description": "Revit.Elements.Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "7a6944bf9f9f4785a100261bb1b93d14",
+          "Name": "Solid[]",
+          "Description": "Solid[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "The Solids in this Element\n\nElement.Solids: Solid[]"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.List.FirstItem@var[]..[]",
+      "Id": "284b5f18fee349fb8ee622c5f519898b",
+      "Inputs": [
+        {
+          "Id": "78cb5a967afa4a248e7aa6df9cde84e0",
+          "Name": "list",
+          "Description": "List to get the first item from.\n\nvar[]..[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "bd3d93d01c964b56bcca6943383c3504",
+          "Name": "item",
+          "Description": "First item in the list.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Returns the first item in a list.\n\nList.FirstItem (list: var[]..[]): var[]..[]"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.List.LastItem@var[]..[]",
+      "Id": "cb4a1b6268de46c79a58a144935da481",
+      "Inputs": [
+        {
+          "Id": "59478d1eb14b4c6591fa9de66c44ab98",
+          "Name": "list",
+          "Description": "List to get the last item of.\n\nvar[]..[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d681632596264867bac9e1263c2e983a",
+          "Name": "last",
+          "Description": "Last item in the list.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Retrieves the last item in a list.\n\nList.LastItem (list: var[]..[]): var[]..[]"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "2fd5cfcf1f064ef7bad60731071085ce",
+      "End": "c58c7d7b7cc9467792db89134b240c61",
+      "Id": "004ee99fb4c44d8eab3de86f9ffa0993"
+    },
+    {
+      "Start": "e9d7290fb5874934b65f0200d21b14e7",
+      "End": "78cb5a967afa4a248e7aa6df9cde84e0",
+      "Id": "8b2ab2dcb5eb4d5ab988fb7797fee632"
+    },
+    {
+      "Start": "e9d7290fb5874934b65f0200d21b14e7",
+      "End": "59478d1eb14b4c6591fa9de66c44ab98",
+      "Id": "faf15122a20848fdaa82e39aaca852cc"
+    },
+    {
+      "Start": "bd3d93d01c964b56bcca6943383c3504",
+      "End": "3b5319d9e1f244a685c23aa349cc75db",
+      "Id": "3516d715489a4c9cb66143a493dcf3c1"
+    },
+    {
+      "Start": "d681632596264867bac9e1263c2e983a",
+      "End": "490215153df2466286771a351581484c",
+      "Id": "76bfd0f0c630471793be64ede2018584"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.10.1.3976",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -221.96292114257813,
+      "EyeY": 78.567596435546875,
+      "EyeZ": 138.26388549804688,
+      "LookX": 76.253875732421875,
+      "LookY": -61.243972778320313,
+      "LookZ": -66.545455932617188,
+      "UpX": 0.24280849099159241,
+      "UpY": 0.94664919376373291,
+      "UpZ": -0.21189464628696442
+    },
+    "NodeViews": [
+      {
+        "ShowGeometry": true,
+        "Name": "File Path",
+        "Id": "1a8da78dc52c4b86a454017fec7c1aea",
+        "IsSetAsInput": true,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 4403.2433570478624,
+        "Y": -270.3591997903369
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Data.ExportCSV",
+        "Id": "48c6cb8c79ea484b89affa35068c3d12",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 5093.6287529002766,
+        "Y": -268.01802117296569
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Get Beam and Columns",
+        "Id": "d029325e4c04438790925170583d640e",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 4396.0898601261588,
+        "Y": -153.40777196589653
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Element.Solids",
+        "Id": "0f4b8e39deec4d69bfd69ff32fb3a17a",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 5012.1599875176034,
+        "Y": 43.121342998805858
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "List.FirstItem",
+        "Id": "284b5f18fee349fb8ee622c5f519898b",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 4742.0595472289078,
+        "Y": -151.42894945172918
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "List.LastItem",
+        "Id": "cb4a1b6268de46c79a58a144935da481",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 4746.13473820839,
+        "Y": 29.300053980156918
+      }
+    ],
+    "Annotations": [],
+    "X": -5062.1063313065015,
+    "Y": 456.91123506464891,
+    "Zoom": 1.1043137252503148
+  }
+}
