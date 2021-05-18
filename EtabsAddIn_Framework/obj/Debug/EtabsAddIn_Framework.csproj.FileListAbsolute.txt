@@ -1,0 +1,11 @@
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\bin\Debug\EtabsAddIn_Framework.dll
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\bin\Debug\EtabsAddIn_Framework.pdb
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\bin\Debug\ETABSv17.dll
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.Form1.resources
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.csproj.GenerateResource.cache
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.csproj.CoreCompileInputs.cache
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.csproj.CopyComplete
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.dll
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.pdb
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.csprojAssemblyReference.cache
+C:\Users\gcai\Google Drive\WorkRelated\DEVELOPMENT\EtabsAddIn_Framework\EtabsAddIn_Framework\obj\Debug\EtabsAddIn_Framework.Properties.Resources.resources
